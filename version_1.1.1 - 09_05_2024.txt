@@ -1,0 +1,15 @@
+Phiên bản mới nhất:
+1.1.1 - 09/05/2024
+Cập nhật file Main.java cho Yêu cầu 4, điều chỉnh file Req4_1.txt trong thư mục expected_output.
+
+Các phiên bản cũ:
+1.1 - 09/05/2024
+Bổ sung làm rõ quy tắc sắp xếp Yêu cầu 3.
+1.0.3 - 09/05/2024
+Cập nhật nội dung file Req1.txt và file Req4_1.txt trong thư mục expected_output.
+1.0.2 - 08/05/2024
+- Điều chỉnh access modifier của thuộc tính tại sơ đồ lớp CommonAccommodation và LuxuryAccommodation thành protected.
+1.0.1 - 08/05/2024
+- Điều chỉnh đề bài trang 7, cập nhật phần mô tả của 2 phương thức khởi tạo của lớp Hotel, điều chỉnh tham số truyền vào cho thuộc tính số 7 từ double thành int.
+- Bổ sung package java.io vào file ReservationSystem.java cung cấp sẵn.
+1.0 - 08/05/2024 - Đề phiên bản đầu tiên.
