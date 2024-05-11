@@ -26,6 +26,7 @@ public class Main {
 
         ReservationSystem ReservationSystem = new ReservationSystem(accPath, roomPath, roomInAccPath);
         
+        //add
         ArrayList<String> req5 = new ArrayList<>();
         try {
             Accommodation acc = new Homestay(1, "Cozy Homestay", "123 Main St", "City A", 4.8f);
@@ -38,6 +39,8 @@ public class Main {
             req5.add(String.valueOf(e.getMessage()));
         }
         writeFile(REQUIREMENT_OUTPUT_FILES[5], req5);
+
+        
 
         // for (String arg : args) {
         //     switch (arg) {
