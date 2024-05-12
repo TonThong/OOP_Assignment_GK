@@ -1,5 +1,5 @@
 
-file = "Req2.txt"
+file = "Req5.txt"
 expectedInputPath = "./SourceCode/expected_output/" + file
 inputPath = "./SourceCode/output/" + file
 
@@ -7,8 +7,8 @@ f1 = open(expectedInputPath,'r')
 f2 = open(inputPath,'r')
 
 while (True):
-    inputLine1 = f1.readline()
-    inputLine2 = f2.readline()
+    inputLine1 = f1.read().strip()
+    inputLine2 = f2.read().strip()
 
     if(not inputLine1):
         print(True)

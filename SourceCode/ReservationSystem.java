@@ -288,7 +288,6 @@ public class ReservationSystem {
         ArrayList<String[]> resList =  readFile(reservationPath);
         double tempCost = 0.0;
 
-
         for (Accommodation accItem : accList){
             if(acc.getId() == accItem.getId()){
                 acc =accItem;
@@ -300,7 +299,7 @@ public class ReservationSystem {
             if(res.length == 5){
                 CommonAccommodation tempAcc =(CommonAccommodation)acc;
                 // Integer idRes= Integer.parseInt(res[0]);
-                Integer idAcc= Integer.parseInt(res[1]);
+                // Integer idAcc= Integer.parseInt(res[1]);
                 Integer idRoom= Integer.parseInt(res[2]);
                 Date resCheckin = new Date(Integer.parseInt(res[3]));
                 Date resCheckout =new Date(Integer.parseInt(res[4]));
@@ -321,13 +320,30 @@ public class ReservationSystem {
                 }
             }
         }
+        
+        String[] tempString = {String.valueOf(resList.size()+1),
+                                String.valueOf(acc.getId()),
+                                String.valueOf(room.getRoomID()),
+                                String.valueOf(checkin.getTime()),
+                                String.valueOf(checkout.getTime()),};
 
-        System.out.println(checkin.getTime());
-        System.out.println(checkout.getTime());
-        System.out.println(checkin.toString());
-        System.out.println(checkout.toString());
+        resList.add(tempString);
+        try {
+            FileWriter writer = new FileWriter(reservationPath);
+                for(String[] res : resList){
+                    writer.write(String.join(",",res));
+                    writer.write("\r\n");
+            }
+
+            writer.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("Error.");
+        } catch (Exception e) {
+            System.out.println("Cannot write file");
+        }
+
         long tempDay = diffBetweenDays(checkin.getTime(),checkout.getTime());
-        // System.out.println(tempDay);
         double cost = tempCost * tempDay;
         double total = cost + cost*0.08;
         return total;
@@ -338,15 +354,18 @@ public class ReservationSystem {
         Date date = new Date(dateStart * 1000);
         Date date1 = new Date(dateEnd * 1000);
 
+        date = removeTime(date);
+        date1 = removeTime(date1);
+
         long diff = Math.abs(date1.getTime() - date.getTime());
-
-        System.out.println(diff); //add
-
         long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-
-        System.out.println(numOfDays); //add
-
         return numOfDays;
+    }
+
+    private Date removeTime(Date date) {
+        long time = date.getTime();
+        long timeWithoutTime = time - (time % (24 * 60 * 60 * 1000));
+        return new Date(timeWithoutTime);
     }
 
     public ArrayList<String[]> readFile(String reservationPath){
