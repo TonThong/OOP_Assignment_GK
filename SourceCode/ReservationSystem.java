@@ -145,7 +145,6 @@ public class ReservationSystem {
                         for (Room room : listRoom) {
                             if (room.getMaxOfPeople() >= numOfPeople ){
                                 temp.add(tempAcc);
-                                break;
                             }
                         }
                     }
@@ -192,40 +191,45 @@ public class ReservationSystem {
                 }
             }else{
                 CommonAccommodation tempAcc =(CommonAccommodation)temp;
-                for(String[] res: resList){
-                    if(res.length == 5){
-                        // Integer idRes= Integer.parseInt(res[0]);
-                        Integer idAcc= Integer.parseInt(res[1]);
-                        Integer idRoom= Integer.parseInt(res[2]);
-                        Date resCheckin = new Date(Integer.parseInt(res[3]));
-                        Date resCheckout =new Date(Integer.parseInt(res[4]));
-                        
-                        ArrayList<Room> tempRoomList = tempAcc.getListRoom();
-                        
-                        for (Room tempRoom : tempRoomList) {
-                            if(tempRoom.getMaxOfPeople()-numOfPeople>=2){
+                ArrayList<Room> tempRoomList = tempAcc.getListRoom();
+
+                for (int i = 0; i < tempRoomList.size();i++) {
+                    for (String[] res:resList){
+                        if(res.length == 5){
+                            Integer idAcc= Integer.parseInt(res[1]);
+                            Integer idRoom= Integer.parseInt(res[2]);
+                            Date resCheckin = new Date(Integer.parseInt(res[3]));
+                            Date resCheckout =new Date(Integer.parseInt(res[4]));          
+                            if(tempRoomList.get(i).getMaxOfPeople() - numOfPeople > 2){
+                                tempRoomList.remove(i);
                                 continue;
                             }
                             if(idAcc == tempAcc.getId()){
                                 if(
-                                (idRoom == tempRoom.getRoomID()) &&
-                                ((resCheckout.compareTo(checkin) <=0)||
+                                (idRoom == tempRoomList.get(i).getRoomID()) &&
+                                (!(resCheckout.compareTo(checkin) <=0)||
                                 (resCheckin.compareTo(checkout) >=0)) &&
-                                (tempRoom.getCost()>= priceFrom)&&
-                                (tempRoom.getCost()<= priceTo)
+                                (tempRoomList.get(i).getCost()>= priceFrom)&&
+                                (tempRoomList.get(i).getCost()<= priceTo)
                                 ){
-                                    tempList.remove(temp);
-                                    break;
+                                    tempRoomList.remove(i);
+                                    continue;
                                 }
-                            tempList.remove(temp);
-                            break; 
                             }
                         }
                     }
                 }
             }
         }
-        return tempList;
+        ArrayList<Accommodation> tempOutput= new ArrayList<Accommodation>();
+        for (Accommodation acc : tempList){
+            if(!tempOutput.contains(acc)){
+                for(Accommodation tempAcc : emptyRoom(acc)){
+                    tempOutput.add(tempAcc);
+                }
+            }
+        }
+        return tempOutput;
     }
 
     // Requirement 4
@@ -276,7 +280,14 @@ public class ReservationSystem {
                 break;
             }
         }
-        return tempAccList;
+
+        ArrayList<Accommodation> tempOutput= new ArrayList<Accommodation>();
+        for (Accommodation acc : tempAccList){
+            if(!tempOutput.contains(acc)){
+                    tempOutput.add(acc);
+            }
+        }
+        return tempOutput;
     }
 
     // Requirement 5
@@ -488,5 +499,16 @@ public class ReservationSystem {
             }
         }
         return true;
+    }
+
+    public ArrayList<Accommodation> emptyRoom(Accommodation acc){
+        ArrayList<Accommodation> temp = new ArrayList<>();
+        if(acc instanceof CommonAccommodation){
+            CommonAccommodation tempAcc = (CommonAccommodation)acc;
+            for (Room room : tempAcc.getListRoom()){
+                temp.add(acc);
+            }
+        }
+        return temp;
     }
 }
