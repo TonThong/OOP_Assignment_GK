@@ -161,11 +161,11 @@ public class ReservationSystem {
         ArrayList<Accommodation> tempList = searchForRoom(city, numOfPeople);
         ArrayList<String[]> resList = readFile(reservationPath);
 
-        for(Accommodation temp:tempList){
-            if(temp instanceof LuxuryAccommodation){
-                LuxuryAccommodation tempAcc =(LuxuryAccommodation)temp;
+        for(int j = 0 ; j < tempList.size() ; j++){
+            if(tempList.get(j) instanceof LuxuryAccommodation){
+                LuxuryAccommodation tempAcc =(LuxuryAccommodation)tempList.get(j);
                 if(tempAcc.getMaxOfPeople()-numOfPeople>=2){
-                    tempList.remove(temp);
+                    tempList.remove(j);
                     continue;
                 }
                 for(String[] res: resList){
@@ -174,8 +174,8 @@ public class ReservationSystem {
                         Integer idAcc= Integer.parseInt(res[1]);
                         Date resCheckin = new Date(Integer.parseInt(res[2]));
                         Date resCheckout =new Date(Integer.parseInt(res[3]));
-                        if(idAcc == temp.getId()){
-                            System.out.println(temp.toString());
+                        if(idAcc == tempList.get(j).getId()){
+                            System.out.println(tempList.get(j).toString());
                             if(
                             ((resCheckout.compareTo(checkin) <=0)||
                             (resCheckin.compareTo(checkout) >=0)) &&
@@ -183,14 +183,14 @@ public class ReservationSystem {
                             (tempAcc.getCost()<= priceTo)&&
                             (tempAcc.getMaxOfPeople() - numOfPeople < 2)
                             ){
-                                tempList.remove(temp);
+                                tempList.remove(j);
                                 break;
                             }
                         }
                     }
                 }
             }else{
-                CommonAccommodation tempAcc =(CommonAccommodation)temp;
+                CommonAccommodation tempAcc =(CommonAccommodation)tempList.get(j);
                 ArrayList<Room> tempRoomList = tempAcc.getListRoom();
 
                 for (int i = 0; i < tempRoomList.size();i++) {
@@ -508,6 +508,8 @@ public class ReservationSystem {
             for (int i = 0 ; i < tempAcc.getListRoom().size();i++){
                 temp.add(acc);
             }
+        }else{
+            temp.add(acc);
         }
         return temp;
     }
