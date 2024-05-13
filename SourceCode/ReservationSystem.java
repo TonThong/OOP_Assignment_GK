@@ -505,7 +505,7 @@ public class ReservationSystem {
         ArrayList<Accommodation> temp = new ArrayList<>();
         if(acc instanceof CommonAccommodation){
             CommonAccommodation tempAcc = (CommonAccommodation)acc;
-            for (Room room : tempAcc.getListRoom()){
+            for (int i = 0 ; i < tempAcc.getListRoom().size();i++){
                 temp.add(acc);
             }
         }
