@@ -151,7 +151,8 @@ public class ReservationSystem {
                 }
             }
         }
-        return temp;
+
+        return sortRequired2(temp);
     }
 
     // Requirement 3
@@ -166,6 +167,7 @@ public class ReservationSystem {
                 LuxuryAccommodation tempAcc =(LuxuryAccommodation)tempList.get(j);
                 if(tempAcc.getMaxOfPeople()-numOfPeople>=2){
                     tempList.remove(j);
+                    j--;
                     continue;
                 }
                 for(String[] res: resList){
@@ -175,7 +177,6 @@ public class ReservationSystem {
                         Date resCheckin = new Date(Integer.parseInt(res[2]));
                         Date resCheckout =new Date(Integer.parseInt(res[3]));
                         if(idAcc == tempList.get(j).getId()){
-                            System.out.println(tempList.get(j).toString());
                             if(
                             ((resCheckout.compareTo(checkin) <=0)||
                             (resCheckin.compareTo(checkout) >=0)) &&
@@ -184,6 +185,7 @@ public class ReservationSystem {
                             (tempAcc.getMaxOfPeople() - numOfPeople < 2)
                             ){
                                 tempList.remove(j);
+                                j--;
                                 break;
                             }
                         }
@@ -202,6 +204,7 @@ public class ReservationSystem {
                             Date resCheckout =new Date(Integer.parseInt(res[4]));          
                             if(tempRoomList.get(i).getMaxOfPeople() - numOfPeople > 2){
                                 tempRoomList.remove(i);
+                                j--;
                                 continue;
                             }
                             if(idAcc == tempAcc.getId()){
@@ -213,6 +216,7 @@ public class ReservationSystem {
                                 (tempRoomList.get(i).getCost()<= priceTo)
                                 ){
                                     tempRoomList.remove(i);
+                                    j--;
                                     continue;
                                 }
                             }
@@ -229,7 +233,7 @@ public class ReservationSystem {
                 }
             }
         }
-        return tempOutput;
+        return sortRequired3(tempOutput);
     }
 
     // Requirement 4
@@ -237,14 +241,23 @@ public class ReservationSystem {
         String roomType, Boolean privatePool, Integer starQuality, Boolean freeBreakfast, Boolean privateBar) {
         /* Code here */
         ArrayList<Accommodation> tempAccList = searchForRoom(city, numOfPeople);
+        Boolean tempPrivatePool = privatePool;
+        Integer tempStarQuality = starQuality;
+        Boolean tempFreeBreakfast = freeBreakfast;
+        Boolean tempPrivateBar =privateBar;
 
-        for(Accommodation tempAcc:tempAccList){
-            if(CheckRequired(tempAcc, roomType, privatePool, starQuality, freeBreakfast, privateBar) == null){
-                tempAccList.remove(tempAcc);
-                break;
+        for(int i = 0 ; i < tempAccList.size();i++){
+            privatePool = tempPrivatePool;
+            starQuality = tempStarQuality;
+            freeBreakfast = tempFreeBreakfast;
+            privateBar = tempPrivateBar;
+            if(CheckRequired(tempAccList.get(i), roomType, privatePool, starQuality, freeBreakfast, privateBar) == null){
+                tempAccList.remove(i);
+                i--;
+                continue;
             }
-            if(tempAcc instanceof LuxuryAccommodation){
-                LuxuryAccommodation temp = (LuxuryAccommodation)tempAcc;
+            if(tempAccList.get(i) instanceof LuxuryAccommodation){
+                LuxuryAccommodation temp = (LuxuryAccommodation)tempAccList.get(i);
                 while(true){
                     if(privatePool == null){
                         privatePool = temp.isHasPool();
@@ -259,24 +272,36 @@ public class ReservationSystem {
                     break;
                 }
             }else{
-                CommonAccommodation temp = (CommonAccommodation)tempAcc;
+                CommonAccommodation temp = (CommonAccommodation)tempAccList.get(i);
                 while(true){
                     if(temp instanceof Resort){
                         if(privatePool == null){
-                            Resort tempResort = (Resort)tempAcc;
+                            Resort tempResort = (Resort)tempAccList.get(i);
                             privatePool = tempResort.isHasPool();
                             starQuality = tempResort.getStar();
                         }
                     }
                     if(temp instanceof Hotel){
-                        Hotel tempHotel = (Hotel)tempAcc;
+                        Hotel tempHotel = (Hotel)tempAccList.get(i);
                         starQuality = tempHotel.getStar();
                     }
                     break;
                 }
+                // for (Room tempRoom : temp.getListRoom()){
+                for(int j = 0 ; j < temp.getListRoom().size();j++){
+                    if(!roomType.equals(temp.getListRoom().get(j).getTypeOfRoom())){
+                        temp.getListRoom().remove(j);
+                        j--;
+                    }
+                    if(numOfPeople > temp.getListRoom().get(j).getMaxOfPeople()){
+                        temp.getListRoom().remove(j);
+                        j--;
+                    }
+                }
             }
-            if(!isRequired(tempAcc, roomType, privatePool, starQuality, freeBreakfast, privateBar)){
-                tempAccList.remove(tempAcc);
+            if(!isRequired(tempAccList.get(i), roomType, privatePool, starQuality, freeBreakfast, privateBar)){
+                tempAccList.remove(i);
+                i--;
                 break;
             }
         }
@@ -284,7 +309,9 @@ public class ReservationSystem {
         ArrayList<Accommodation> tempOutput= new ArrayList<Accommodation>();
         for (Accommodation acc : tempAccList){
             if(!tempOutput.contains(acc)){
-                    tempOutput.add(acc);
+                for(Accommodation tempAcc : emptyRoom(acc)){
+                    tempOutput.add(tempAcc);
+                }
             }
         }
         return tempOutput;
@@ -513,4 +540,75 @@ public class ReservationSystem {
         }
         return temp;
     }
+    public ArrayList<Accommodation> sortRequired2(ArrayList<Accommodation> accommodations){
+        ArrayList<Accommodation> tempLuxury = new ArrayList<>();
+        ArrayList<Accommodation> tempCommon = new ArrayList<>();
+        ArrayList<String> nameLuxury = new ArrayList<>();
+        ArrayList<String> nameCommon = new ArrayList<>();
+        ArrayList<Accommodation> tempOutPut = new ArrayList<>();
+
+        for (Accommodation acc:accommodations){
+            if(acc instanceof LuxuryAccommodation){
+                tempLuxury.add(acc);
+            }
+            if(acc instanceof CommonAccommodation){
+                tempCommon.add(acc);
+            }
+        }
+
+        for (Accommodation tempAcc : tempLuxury){
+            nameLuxury.add(tempAcc.getName());
+        }
+        Collections.sort(nameLuxury, (o1, o2) -> o1.compareTo(o2));
+        System.out.println(nameLuxury.toString());
+
+        for (Accommodation tempAcc : tempCommon){
+            nameCommon.add(tempAcc.getName());
+        }
+        Collections.sort(nameCommon, (o1, o2) -> o1.compareTo(o2));
+        System.out.println(nameCommon.toString());
+
+        for(String tempString : nameLuxury){
+            for (Accommodation tempAcc : tempLuxury){
+                if(tempAcc.getName().equals(tempString)){
+                    tempOutPut.add(tempAcc);
+                    break;
+                }
+            }
+        }
+
+        for(String tempString : nameCommon){
+            for (Accommodation tempAcc : tempCommon){
+                if(tempAcc.getName().equals(tempString)){
+                    tempOutPut.add(tempAcc);
+                    break;
+                }
+            }
+        }
+
+        return tempOutPut;
+    }
+
+    public ArrayList<Accommodation> sortRequired3(ArrayList<Accommodation> accommodations){
+        ArrayList<String> name = new ArrayList<>();
+        ArrayList<Accommodation> tempOutPut = new ArrayList<>();
+
+        for (Accommodation tempAcc : accommodations){
+            name.add(tempAcc.getName());
+        }
+        Collections.sort(name, (o1, o2) -> o2.compareTo(o1));
+        System.out.println(name.toString());
+
+        for(String tempString : name){
+            for (Accommodation tempAcc : accommodations){
+                if(tempAcc.getName().equals(tempString)){
+                    tempOutPut.add(tempAcc);
+                    break;
+                }
+            }
+        }
+
+        return tempOutPut;
+    }
+
 }

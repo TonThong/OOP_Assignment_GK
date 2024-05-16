@@ -1,0 +1,5 @@
+Hotel [2, 5, Luxury Hotel, 456 Elm St, City B]
+Hotel [2, 5, Luxury Hotel, 456 Elm St, City B]
+Resort [11, Sandy Beach Resort, 4, 234 Sandy Bay, false, City B]
+Hotel [22, 4, White Palace Hotel, 78 Queen St, City B]
+Hotel [22, 4, White Palace Hotel, 78 Queen St, City B]

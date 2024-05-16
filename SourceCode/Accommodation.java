@@ -1,4 +1,4 @@
-abstract class Accommodation {
+abstract class Accommodation{
     /* Code here */
     protected int id;
     protected String name;
