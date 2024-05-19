@@ -1,4 +1,0 @@
-Villa [21, Paradise Villa, 143 Rockside Dr, City H, true, true, true, true, 40, 560]
-Hotel [7, 4, Grand Palace Hotel, 789 King St, City H]
-Resort [8, Sunset Resort, 3, 654 Beach Rd, true, City H]
-Resort [8, Sunset Resort, 3, 654 Beach Rd, true, City H]

@@ -287,7 +287,7 @@ public class ReservationSystem {
                     }
                     break;
                 }
-                // for (Room tempRoom : temp.getListRoom()){
+                
                 for(int j = 0 ; j < temp.getListRoom().size();j++){
                     if(!roomType.equals(temp.getListRoom().get(j).getTypeOfRoom())){
                         temp.getListRoom().remove(j);
@@ -540,11 +540,10 @@ public class ReservationSystem {
         }
         return temp;
     }
+    
     public ArrayList<Accommodation> sortRequired2(ArrayList<Accommodation> accommodations){
         ArrayList<Accommodation> tempLuxury = new ArrayList<>();
         ArrayList<Accommodation> tempCommon = new ArrayList<>();
-        ArrayList<String> nameLuxury = new ArrayList<>();
-        ArrayList<String> nameCommon = new ArrayList<>();
         ArrayList<Accommodation> tempOutPut = new ArrayList<>();
 
         for (Accommodation acc:accommodations){
@@ -555,60 +554,22 @@ public class ReservationSystem {
                 tempCommon.add(acc);
             }
         }
+        Collections.sort(tempLuxury, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        Collections.sort(tempCommon, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
         for (Accommodation tempAcc : tempLuxury){
-            nameLuxury.add(tempAcc.getName());
+            tempOutPut.add(tempAcc);
         }
-        Collections.sort(nameLuxury, (o1, o2) -> o1.compareTo(o2));
-        System.out.println(nameLuxury.toString());
-
+        
         for (Accommodation tempAcc : tempCommon){
-            nameCommon.add(tempAcc.getName());
-        }
-        Collections.sort(nameCommon, (o1, o2) -> o1.compareTo(o2));
-        System.out.println(nameCommon.toString());
-
-        for(String tempString : nameLuxury){
-            for (Accommodation tempAcc : tempLuxury){
-                if(tempAcc.getName().equals(tempString)){
-                    tempOutPut.add(tempAcc);
-                    break;
-                }
-            }
-        }
-
-        for(String tempString : nameCommon){
-            for (Accommodation tempAcc : tempCommon){
-                if(tempAcc.getName().equals(tempString)){
-                    tempOutPut.add(tempAcc);
-                    break;
-                }
-            }
+            tempOutPut.add(tempAcc);
         }
 
         return tempOutPut;
     }
 
     public ArrayList<Accommodation> sortRequired3(ArrayList<Accommodation> accommodations){
-        ArrayList<String> name = new ArrayList<>();
-        ArrayList<Accommodation> tempOutPut = new ArrayList<>();
-
-        for (Accommodation tempAcc : accommodations){
-            name.add(tempAcc.getName());
-        }
-        Collections.sort(name, (o1, o2) -> o2.compareTo(o1));
-        System.out.println(name.toString());
-
-        for(String tempString : name){
-            for (Accommodation tempAcc : accommodations){
-                if(tempAcc.getName().equals(tempString)){
-                    tempOutPut.add(tempAcc);
-                    break;
-                }
-            }
-        }
-
-        return tempOutPut;
+        Collections.sort(accommodations, (o1, o2) -> o2.getName().compareTo(o1.getName()));
+        return accommodations;
     }
-
 }
