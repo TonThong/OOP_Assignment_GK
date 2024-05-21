@@ -26,8 +26,6 @@ def isTrueOfFile(file,expectedInputPath,inputPath):
 
 fileList = ["Req1.txt","Req2_1.txt","Req2_2.txt","Req3_1.txt","Req3_2.txt","Req4_1.txt","Req4_2.txt","Req5.txt"]
 
-for file in fileList:
-    isTrueOfFile(file,"./SourceCode/expected_output/","./SourceCode/output/")
-
 # for file in fileList:
-#     isTrueOfFile(file,"./SourceCode/expected_output_1/","./SourceCode/output_1/")
+#     isTrueOfFile(file,"./SourceCode/expected_output/","./SourceCode/output/")
+

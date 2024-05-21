@@ -23,29 +23,16 @@ public class ReservationSystem {
         ArrayList<String[]> roomOfAccData =  readFile(roomOfAccPath);
         
         for (String[] acc :accData) {
-            String tempTypeOfAcc;
-            tempTypeOfAcc = acc[1];
-            if (acc.length == 5) {
-                tempTypeOfAcc = "Homestay";
-            }else if(acc.length == 6) {
-                tempTypeOfAcc = "Hotel";
-            }else if(acc.length == 7) {
-                tempTypeOfAcc = "Resort";
-            }else if(acc.length == 11) {
-                tempTypeOfAcc = "CruiseShip";
-            }else if(acc.length == 10) {
-                tempTypeOfAcc = "Villa";
-            }
 
-            switch (tempTypeOfAcc) {
-                case "Homestay":
+            switch (acc.length) {
+                case 5:
                     int idHomestay = Integer.parseInt(acc[0]);
                     float rateHomestay = Float.parseFloat(acc[4]);
                     CommonAccommodation tempHomestay =new Homestay(idHomestay, acc[1], acc[2], acc[3], rateHomestay);
                     tempHomestay = provideRoom(roomData, roomOfAccData, tempHomestay);
                     temp.add(tempHomestay);           
                     break; 
-                case "Hotel":
+                case 6:
                     int idHotel = Integer.parseInt(acc[0]);
                     int starHotel = Integer.parseInt(acc[4]);
                     float rateHotel = Float.parseFloat(acc[5]);
@@ -53,18 +40,14 @@ public class ReservationSystem {
                     tempHotel = provideRoom(roomData, roomOfAccData, tempHotel);
                     temp.add(tempHotel);              
                     break; 
-                case "Villa":
+                case 10:
                     int idVilla = Integer.parseInt(acc[0]);
                     int maxOfPeopleVilla = Integer.parseInt(acc[8]);
                     int costVilla = Integer.parseInt(acc[9]);
-                    boolean hasPoolVilla = false;
-                    boolean serveWelcomeVilla = false;
-                    boolean freeBreakfastVilla = false;
-                    boolean hasGymVilla = false;
-                    if(acc[4].compareTo("yes") == 0) hasPoolVilla = true;
-                    if(acc[5].compareTo("yes") == 0) serveWelcomeVilla = true;
-                    if(acc[6].compareTo("yes") == 0) freeBreakfastVilla = true;
-                    if(acc[7].compareTo("yes") == 0) hasGymVilla = true;                   
+                    boolean hasPoolVilla = convertToBoolean(acc[4]);
+                    boolean serveWelcomeVilla = convertToBoolean(acc[5]);
+                    boolean freeBreakfastVilla = convertToBoolean(acc[6]);
+                    boolean hasGymVilla = convertToBoolean(acc[7]);             
                     temp.add(new Villa(idVilla, 
                                         acc[1], 
                                         acc[2], 
@@ -76,30 +59,24 @@ public class ReservationSystem {
                                         maxOfPeopleVilla,
                                         costVilla));                
                     break;
-                case "Resort":
+                case 7:
                     int idResort = Integer.parseInt(acc[0]);
                     int starResort = Integer.parseInt(acc[4]);
                     float rateResort = Float.parseFloat(acc[6]);
-                    boolean hasPoolResort = false;
-                    if(acc[5].compareTo("yes") == 0) hasPoolResort = true;
+                    boolean hasPoolResort = convertToBoolean(acc[5]);
                     CommonAccommodation tempResort = new Resort(idResort, acc[1], acc[2], acc[3], rateResort, starResort, hasPoolResort);
                     tempResort = provideRoom(roomData, roomOfAccData, tempResort);
                     temp.add(tempResort);                
                     break; 
-                case "CruiseShip":
+                case 11:
                     int idCruiseShip = Integer.parseInt(acc[0]);
                     int maxOfPeopleCruiseShip = Integer.parseInt(acc[9]);
                     int costCruiseShip = Integer.parseInt(acc[10]);
-                    boolean hasPoolCruiseShip = false;
-                    boolean serveWelcomeCruiseShip = false;
-                    boolean freeBreakfastCruiseShip = false;
-                    boolean hasGymCruiseShip = false;
-                    boolean hasBarCruiseShip = false;
-                    if(acc[4].compareTo("yes") == 0) hasPoolCruiseShip = true;
-                    if(acc[5].compareTo("yes") == 0) serveWelcomeCruiseShip = true;
-                    if(acc[6].compareTo("yes") == 0) freeBreakfastCruiseShip = true;
-                    if(acc[7].compareTo("yes") == 0) hasGymCruiseShip = true;
-                    if(acc[8].compareTo("yes") == 0) hasBarCruiseShip = true;
+                    boolean hasPoolCruiseShip = convertToBoolean(acc[4]);
+                    boolean serveWelcomeCruiseShip = convertToBoolean(acc[5]);
+                    boolean freeBreakfastCruiseShip = convertToBoolean(acc[6]);
+                    boolean hasGymCruiseShip = convertToBoolean(acc[7]);
+                    boolean hasBarCruiseShip = convertToBoolean(acc[8]);
                     temp.add(new CruiseShip(idCruiseShip, 
                                         acc[1], 
                                         acc[2], 
@@ -134,9 +111,6 @@ public class ReservationSystem {
                     }
                 }
             }
-        }
-
-        for (Accommodation acc : accommodationsList) {
             if(acc instanceof CommonAccommodation){
                 if(acc.getCity().compareTo(city) == 0){
                     CommonAccommodation tempAcc =(CommonAccommodation)acc;
@@ -287,7 +261,7 @@ public class ReservationSystem {
                     }
                     break;
                 }
-                
+
                 for(int j = 0 ; j < temp.getListRoom().size();j++){
                     if(!roomType.equals(temp.getListRoom().get(j).getTypeOfRoom())){
                         temp.getListRoom().remove(j);
@@ -572,4 +546,11 @@ public class ReservationSystem {
         Collections.sort(accommodations, (o1, o2) -> o2.getName().compareTo(o1.getName()));
         return accommodations;
     }
+    public boolean convertToBoolean(String a){
+        if (a.equals("yes")){
+            return true;
+        }
+        return false;
+    }
+
 }
