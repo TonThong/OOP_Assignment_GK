@@ -23,7 +23,6 @@ public class ReservationSystem {
         ArrayList<String[]> roomOfAccData =  readFile(roomOfAccPath);
         
         for (String[] acc :accData) {
-
             switch (acc.length) {
                 case 5:
                     int idHomestay = Integer.parseInt(acc[0]);
@@ -176,7 +175,9 @@ public class ReservationSystem {
                             Integer idRoom= Integer.parseInt(res[2]);
                             Date resCheckin = new Date(Integer.parseInt(res[3]));
                             Date resCheckout =new Date(Integer.parseInt(res[4]));          
-                            if(tempRoomList.get(i).getMaxOfPeople() - numOfPeople > 2){
+                            if((tempRoomList.get(i).getMaxOfPeople() - numOfPeople > 2)|| 
+                            (tempRoomList.get(i).getCost()< priceFrom)||
+                            (tempRoomList.get(i).getCost()> priceTo)){
                                 tempRoomList.remove(i);
                                 j--;
                                 continue;
@@ -185,9 +186,7 @@ public class ReservationSystem {
                                 if(
                                 (idRoom == tempRoomList.get(i).getRoomID()) &&
                                 (!(resCheckout.compareTo(checkin) <=0)||
-                                (resCheckin.compareTo(checkout) >=0)) &&
-                                (tempRoomList.get(i).getCost()>= priceFrom)&&
-                                (tempRoomList.get(i).getCost()<= priceTo)
+                                (resCheckin.compareTo(checkout) >=0))
                                 ){
                                     tempRoomList.remove(i);
                                     j--;
@@ -221,11 +220,7 @@ public class ReservationSystem {
         Boolean tempPrivateBar =privateBar;
 
         for(int i = 0 ; i < tempAccList.size();i++){
-            privatePool = tempPrivatePool;
-            starQuality = tempStarQuality;
-            freeBreakfast = tempFreeBreakfast;
-            privateBar = tempPrivateBar;
-            if(CheckRequired(tempAccList.get(i), roomType, privatePool, starQuality, freeBreakfast, privateBar) == null){
+            if(CheckRequired(tempAccList.get(i), roomType, tempPrivatePool, tempStarQuality, tempFreeBreakfast, tempPrivateBar) == null){
                 tempAccList.remove(i);
                 i--;
                 continue;
@@ -233,13 +228,13 @@ public class ReservationSystem {
             if(tempAccList.get(i) instanceof LuxuryAccommodation){
                 LuxuryAccommodation temp = (LuxuryAccommodation)tempAccList.get(i);
                 while(true){
-                    if(privatePool == null){
+                    if(tempPrivatePool == null){
                         privatePool = temp.isHasPool();
                     }
-                    if(freeBreakfast == null){
+                    if(tempFreeBreakfast == null){
                         freeBreakfast = temp.isFreeBreakfast();
                     }
-                    if(privateBar == null){
+                    if(tempPrivateBar == null){
                         CruiseShip tempCruiseShip = (CruiseShip)temp;
                         privateBar = tempCruiseShip.isHasBar();
                     }
@@ -332,7 +327,7 @@ public class ReservationSystem {
                 }
             }
         }
-        
+
         String[] tempString = {String.valueOf(resList.size()+1),
                                 String.valueOf(acc.getId()),
                                 String.valueOf(room.getRoomID()),
